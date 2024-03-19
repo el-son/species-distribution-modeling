@@ -207,11 +207,13 @@ futureClimateRaster <- cmip6_world("CNRM-CM6-1", "585", "2061-2080", var = "bioc
 names(futureClimateRaster)=names(currentClimRasterStack)
 
 
+#crop it into bounding box
 geographicAreaFutureC6 <- crop(futureClimateRaster, predictExtent)
 
 
 # 8. Run the future SDM
 
+# if you get a java error, restart r, and then rerun packages
 habronattusFutureSDM <- raster::predict(habronattusCurrentSDM, geographicAreaFutureC6)
 
 
@@ -220,7 +222,7 @@ habronattusFutureSDM <- raster::predict(habronattusCurrentSDM, geographicAreaFut
 
 habronattusFutureSDMDf <- as.data.frame(habronattusFutureSDM, xy=TRUE)
 
-
+#establish our bonding box of upper and lower long and lat
 xmax <- max(habronattusFutureSDMDf$x)
 xmin <- min(habronattusFutureSDMDf$x)
 ymax <- max(habronattusFutureSDMDf$y)
@@ -242,6 +244,8 @@ ggplot() +
        fill = "Env Suitability") +
   theme(legend.box.background=element_rect(),legend.box.margin=margin(5,5,5,5)) 
 
+
+# save the file to the output directory
 ggsave("output/habronattusFutureSdm.jpg",  width = 8, height = 6)
 
 
